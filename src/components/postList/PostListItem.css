@@ -1,0 +1,22 @@
+.postListItem {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.postListItem__body {
+  white-space: pre-line;
+}
+
+.postListItem__body--edited {
+  overflow-y: scroll;
+}
+
+.postListItem--loading::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 10, 0.8) url('/gear.svg') no-repeat center center;
+  background-size: 100px 82px;
+  z-index: 1;
+}

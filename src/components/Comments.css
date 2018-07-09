@@ -1,0 +1,9 @@
+.comments {
+}
+.comments__item {
+  list-style-type: none;
+}
+
+.comments__email {
+  font-weight: bold;
+}

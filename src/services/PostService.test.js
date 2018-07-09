@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 
 import { BASE_URL } from '../constans';
-import { postService } from './PosrtService';
+import { postService } from './PostService';
 
 describe('Post Service fetch', () => {
   const emptyArray = [];
@@ -29,6 +29,7 @@ describe('Post Service fetch', () => {
   it('fetchPosts calls json on response', async done => {
     const result = await postService.fetchPosts();
     expect(result).toEqual(emptyArray);
+    done();
   });
 
   it('fetchComments calls good URL', () => {

@@ -1,5 +1,6 @@
 import React from 'react';
 import Post from './PostListItem';
+import './PostList.css';
 
 export default class PostList extends React.Component {
   constructor(props) {
@@ -46,26 +47,20 @@ export default class PostList extends React.Component {
 
   render() {
     return (
-      <ul>
+      <ol>
         {this.state.posts.map((post, i) => {
           return (
-            <li key={i}>
+            <li key={i} className="postList__item">
               <Post
                 post={post}
-                toggleComments={() => {
-                  this.toggleComments(post.id);
-                }}
-                deletePost={() => {
-                  this.deletePost(post.id);
-                }}
-                updatePost={body => {
-                  this.updatePost(post.id, body);
-                }}
+                toggleComments={() => this.toggleComments(post.id)}
+                deletePost={() => this.deletePost(post.id)}
+                updatePost={body => this.updatePost(post.id, body)}
               />
             </li>
           );
         })}
-      </ul>
+      </ol>
     );
   }
 }

@@ -1,49 +1,62 @@
 import React from 'react';
 import Comments from '../Comments';
+import './PostListItem.css';
+import PostListItemToolbar from './PostListItemToolbar';
 
 export default class Post extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      edited: false,
-      body: props.post.body
+      isPostUnderEdit: false,
+      body: props.post.body,
+      loading: false
     };
   }
 
-  getCommentButtonLabel() {
-    return this.props.post.comments.length ? 'Hide Comments' : 'Show Comments';
+  async handleSaveClick() {
+    this.setState({ loading: true });
+    if (this.state.isPostUnderEdit) {
+      await this.props.updatePost(this.state.body);
+    }
+    this.setState({ isPostUnderEdit: !this.state.isPostUnderEdit, loading: false });
   }
 
-  onHandleSaveClick() {
-    if (this.state.edited) {
-      this.props.updatePost(this.state.body);
-    }
-    this.setState({ edited: !this.state.edited });
+  async handleDeleteClick() {
+    this.setState({ loading: true });
+    await this.props.deletePost();
+    this.setState({ loading: false });
+  }
+
+  async handleShowCommentClick() {
+    await this.props.toggleComments();
   }
 
   render() {
     return (
-      <div>
+      <article className={(this.state.loading ? 'postListItem--loading' : '') + ' postListItem'}>
         <h3>{this.props.post.title}</h3>
-        {this.state.edited ? (
+        {this.state.isPostUnderEdit ? (
           <textarea
+            className="postListItem__body postListItem__body--edited"
             defaultValue={this.props.post.body}
+            cols={130}
+            rows={4}
             onChange={event => {
               this.setState({ body: event.target.value });
             }}
           />
         ) : (
-          <p>{this.props.post.body}</p>
+          <p className="postListItem__body">{this.props.post.body}</p>
         )}
-        <div>
-          <button onClick={() => this.onHandleSaveClick()}>{this.state.edited ? 'Save' : 'Edit'}</button>
-          <button onClick={() => this.props.deletePost()}>Delete</button>
-          <button className="comments" onClick={() => this.props.toggleComments()}>
-            {this.getCommentButtonLabel()}
-          </button>
-        </div>
+        <PostListItemToolbar
+          isPostUnderEdit={this.state.isPostUnderEdit}
+          areCommentsVisible={!!this.props.post.comments.length}
+          handleSaveClick={() => this.handleSaveClick()}
+          handleDeleteClick={() => this.handleDeleteClick()}
+          handleShowCommentClick={() => this.handleShowCommentClick()}
+        />
         <Comments comments={this.props.post.comments} />
-      </div>
+      </article>
     );
   }
 }
