@@ -9,8 +9,9 @@ export default class PostList extends React.Component {
     };
   }
 
-  componentDidMount() {
-    return this.props.postService.fetchPosts().then(posts => this.setState({ posts }));
+  async componentDidMount() {
+    const posts = await this.props.postService.fetchPosts();
+    this.setState({ posts });
   }
 
   async toggleComments(postId) {
@@ -27,6 +28,22 @@ export default class PostList extends React.Component {
     });
   }
 
+  async deletePost(postId) {
+    await this.props.postService.deletePost(postId);
+    this.setState({
+      posts: [...this.state.posts.filter(post => post.id !== postId)]
+    });
+  }
+
+  async updatePost(postId, body) {
+    const post = this.state.posts.find(p => p.id === postId);
+    await this.props.postService.updatePost(postId, body);
+    post.body = body;
+    this.setState({
+      posts: [...this.state.posts]
+    });
+  }
+
   render() {
     return (
       <ul>
@@ -35,8 +52,14 @@ export default class PostList extends React.Component {
             <li key={i}>
               <Post
                 post={post}
-                onClick={() => {
+                toggleComments={() => {
                   this.toggleComments(post.id);
+                }}
+                deletePost={() => {
+                  this.deletePost(post.id);
+                }}
+                updatePost={body => {
+                  this.updatePost(post.id, body);
                 }}
               />
             </li>
