@@ -3,7 +3,7 @@ import Comments from '../Comments';
 import './PostListItem.css';
 import PostListItemToolbar from './PostListItemToolbar';
 
-export default class Post extends React.Component {
+export default class PostListItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,8 +14,8 @@ export default class Post extends React.Component {
   }
 
   async handleSaveClick() {
-    this.setState({ loading: true });
     if (this.state.isPostUnderEdit) {
+      this.setState({ loading: true });
       await this.props.updatePost(this.state.body);
     }
     this.setState({ isPostUnderEdit: !this.state.isPostUnderEdit, loading: false });
@@ -27,8 +27,10 @@ export default class Post extends React.Component {
     this.setState({ loading: false });
   }
 
-  async handleShowCommentClick() {
+  async handleToggleCommentsClick() {
+    this.setState({ loading: true });
     await this.props.toggleComments();
+    this.setState({ loading: false });
   }
 
   render() {
@@ -53,7 +55,7 @@ export default class Post extends React.Component {
           areCommentsVisible={!!this.props.post.comments.length}
           handleSaveClick={() => this.handleSaveClick()}
           handleDeleteClick={() => this.handleDeleteClick()}
-          handleShowCommentClick={() => this.handleShowCommentClick()}
+          handleShowCommentClick={() => this.handleToggleCommentsClick()}
         />
         <Comments comments={this.props.post.comments} />
       </article>

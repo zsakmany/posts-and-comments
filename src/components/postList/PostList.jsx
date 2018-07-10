@@ -1,5 +1,5 @@
 import React from 'react';
-import Post from './PostListItem';
+import PostListItem from './PostListItem';
 import './PostList.css';
 
 export default class PostList extends React.Component {
@@ -51,7 +51,7 @@ export default class PostList extends React.Component {
         {this.state.posts.map((post, i) => {
           return (
             <li key={i} className="postList__item">
-              <Post
+              <PostListItem
                 post={post}
                 toggleComments={() => this.toggleComments(post.id)}
                 deletePost={() => this.deletePost(post.id)}

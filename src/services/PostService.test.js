@@ -3,21 +3,21 @@ import sinon from 'sinon';
 import { BASE_URL } from '../constans';
 import { postService } from './PostService';
 
-describe('Post Service fetch', () => {
+describe('Post Service', () => {
   const emptyArray = [];
 
   // @ts-ignore
   const fetchStub = sinon.stub(global, 'fetch');
-  fetchStub.resolves({
-    json: () => emptyArray
-  });
 
   afterAll(() => {
     fetchStub.restore();
   });
 
-  afterEach(() => {
+  beforeEach(() => {
     fetchStub.resetHistory();
+    fetchStub.resolves({
+      json: () => emptyArray
+    });
   });
 
   it('fetchPosts calls good URL', () => {
@@ -26,9 +26,12 @@ describe('Post Service fetch', () => {
     expect(fetchStub.getCall(0).args[0]).toBe(`${BASE_URL}posts`);
   });
 
-  it('fetchPosts calls json on response', async done => {
+  it('fetchPosts creates post objects with comments', async done => {
+    fetchStub.resolves({
+      json: () => [{}]
+    });
     const result = await postService.fetchPosts();
-    expect(result).toEqual(emptyArray);
+    expect(result).toEqual([{ comments: [] }]);
     done();
   });
 
